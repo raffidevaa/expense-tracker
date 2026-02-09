@@ -1,27 +1,61 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Login, Register } from './auth.dto';
+import { hash, compare } from 'bcrypt';
+import { UsersRepository } from 'src/users/users.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
     private jwtService: JwtService,
+    private usersRepo: UsersRepository,
   ) {}
 
-  async signIn(
-    username: string,
-    pass: string,
-  ): Promise<{ access_token: string }> {
-    const user = this.usersService.findOne(username);
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
+  // REGISTER
+  async register(dto: Register) {
+    const exists = await this.usersRepo.findByEmail(dto.email);
+    if (exists) {
+      throw new BadRequestException('Email already registered');
     }
-    const payload = { sub: user.id, username: user.username };
+
+    const hashedPassword = await hash(dto.password, 10);
+
+    const user = await this.usersRepo.createUser({
+      username: dto.username,
+      email: dto.email,
+      password: hashedPassword,
+    });
+
     return {
-      // 💡 Here the JWT secret key that's used for signing the payload
-      // is the key that was passsed in the JwtModule
-      access_token: await this.jwtService.signAsync(payload),
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    };
+  }
+
+  // LOGIN
+  async login(dto: Login) {
+    const user = await this.usersRepo.findByEmail(dto.email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isMatch = await compare(dto.password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const payload = { sub: user.id };
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      access_token: this.jwtService.sign(payload),
     };
   }
 }
