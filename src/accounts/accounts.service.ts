@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AccountsRepository } from './accounts.repository';
-import { CreateAccountDto } from './accounts.dto';
+import { CreateAccountDto, UpdateAccountDto } from './accounts.dto';
 import { UsersRepository } from 'src/users/users.repository';
 
 @Injectable()
@@ -23,5 +23,20 @@ export class AccountsService {
     });
 
     return account;
+  }
+
+  async updateAccount(accountId: string, dto: Partial<UpdateAccountDto>) {
+    const exist = await this.accountRepo.findAccountById(accountId);
+    if (exist == null) {
+      throw new Error('Account not found');
+    }
+
+    const updatedAccount = await this.accountRepo.updateAccount(accountId, {
+      name: dto.name,
+      balance: dto.balance,
+      user: exist.user,
+    });
+
+    return updatedAccount;
   }
 }

@@ -14,4 +14,12 @@ export class AccountsRepository {
     const account = this.repo.create(data);
     return this.repo.save(account);
   }
+
+  updateAccount(id: string, data: Partial<Account>): Promise<Account> {
+    return this.repo.save({ id, ...data });
+  }
+
+  findAccountById(id: string): Promise<Account | null> {
+    return this.repo.findOne({ where: { id } });
+  }
 }

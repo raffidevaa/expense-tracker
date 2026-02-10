@@ -7,3 +7,11 @@ export class CreateAccountDto {
   @IsNumber()
   balance: number;
 }
+
+export class UpdateAccountDto {
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  balance: number;
+}
