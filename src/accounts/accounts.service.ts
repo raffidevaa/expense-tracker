@@ -39,4 +39,15 @@ export class AccountsService {
 
     return updatedAccount;
   }
+
+  async getAccountsByUserId(userId: string) {
+    const user = await this.userRepo.findById(userId);
+    if (user == null) {
+      throw new Error('User not found');
+    }
+
+    const accounts = await this.accountRepo.findAllAccountsByUserId(userId);
+
+    return accounts;
+  }
 }

@@ -8,6 +8,7 @@ import {
   UseGuards,
   Put,
   Param,
+  Get,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AccountsService } from './accounts.service';
@@ -37,5 +38,12 @@ export class AccountsController {
     @Body() dto: UpdateAccountDto,
   ) {
     return this.accountsService.updateAccount(accountId, dto);
+  }
+
+  // get all accounts by user id
+  @HttpCode(HttpStatus.OK)
+  @Get(':user_id')
+  getAccountsByUserId(@Param('user_id') userId: string) {
+    return this.accountsService.getAccountsByUserId(userId);
   }
 }

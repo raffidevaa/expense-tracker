@@ -22,4 +22,8 @@ export class AccountsRepository {
   findAccountById(id: string): Promise<Account | null> {
     return this.repo.findOne({ where: { id } });
   }
+
+  findAllAccountsByUserId(userId: string): Promise<Account[]> {
+    return this.repo.find({ where: { user: { id: userId } } });
+  }
 }
