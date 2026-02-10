@@ -14,6 +14,10 @@ export class UsersRepository {
     return this.repo.findOne({ where: { email } });
   }
 
+  findById(id: string): Promise<User | null> {
+    return this.repo.findOne({ where: { id } });
+  }
+
   createUser(data: Partial<User>): Promise<User> {
     const user = this.repo.create(data);
     return this.repo.save(user);
