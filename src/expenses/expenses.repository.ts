@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Expense } from './expenses.entities';
 
 @Injectable()
@@ -13,5 +13,13 @@ export class ExpensesRepository {
   createExpense(data: Partial<Expense>): Promise<Expense> {
     const expense = this.repo.create(data);
     return this.repo.save(expense);
+  }
+
+  updateExpense(id: string, data: DeepPartial<Expense>): Promise<Expense> {
+    return this.repo.save({ id, ...data });
+  }
+
+  findExpenseById(id: string): Promise<Expense | null> {
+    return this.repo.findOne({ where: { id } });
   }
 }
