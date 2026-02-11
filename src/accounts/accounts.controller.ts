@@ -9,6 +9,7 @@ import {
   Put,
   Param,
   Get,
+  Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AccountsService } from './accounts.service';
@@ -45,5 +46,12 @@ export class AccountsController {
   @Get(':user_id')
   getAccountsByUserId(@Param('user_id') userId: string) {
     return this.accountsService.getAccountsByUserId(userId);
+  }
+
+  // delete account
+  @HttpCode(HttpStatus.OK)
+  @Delete(':account_id')
+  deleteAccount(@Param('account_id') accountId: string) {
+    return this.accountsService.deleteAccount(accountId);
   }
 }

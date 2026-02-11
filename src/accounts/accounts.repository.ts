@@ -26,4 +26,8 @@ export class AccountsRepository {
   findAllAccountsByUserId(userId: string): Promise<Account[]> {
     return this.repo.find({ where: { user: { id: userId } } });
   }
+
+  deleteAccount(id: string): Promise<void> {
+    return this.repo.delete(id).then(() => undefined);
+  }
 }

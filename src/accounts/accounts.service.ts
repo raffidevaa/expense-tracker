@@ -50,4 +50,13 @@ export class AccountsService {
 
     return accounts;
   }
+
+  async deleteAccount(accountId: string) {
+    const exist = await this.accountRepo.findAccountById(accountId);
+    if (exist == null) {
+      throw new Error('Account not found');
+    }
+
+    await this.accountRepo.deleteAccount(accountId);
+  }
 }
