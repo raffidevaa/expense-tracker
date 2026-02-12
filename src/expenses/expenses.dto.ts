@@ -13,3 +13,10 @@ export class UpdateExpenseDto {
   account_id?: string;
   category_id?: string;
 }
+
+export class Statistics {
+  balance: number;
+  spending: number;
+  cashflow: number;
+  income: number;
+}

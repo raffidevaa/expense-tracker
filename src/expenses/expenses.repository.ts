@@ -45,4 +45,32 @@ export class ExpensesRepository {
   deleteExpense(id: string): Promise<void> {
     return this.repo.delete(id).then(() => undefined);
   }
+
+  getTotalSpending(userId: string): Promise<number> {
+    return this.repo
+      .createQueryBuilder('expense')
+      .leftJoin('expense.account', 'account')
+      .select('SUM(expense.amount)', 'total_spending')
+      .where('account.user_id = :userId', { userId })
+      .andWhere('expense.type = :type', { type: 'EXPENSE' })
+      .getRawOne()
+      .then(
+        (result: { total_spending: string | null }) =>
+          Number(result?.total_spending) || 0,
+      );
+  }
+
+  getTotalIncome(userId: string): Promise<number> {
+    return this.repo
+      .createQueryBuilder('expense')
+      .leftJoin('expense.account', 'account')
+      .select('SUM(expense.amount)', 'total_income')
+      .where('account.user_id = :userId', { userId })
+      .andWhere('expense.type = :type', { type: 'INCOME' })
+      .getRawOne()
+      .then(
+        (result: { total_income: string | null }) =>
+          Number(result?.total_income) || 0,
+      );
+  }
 }

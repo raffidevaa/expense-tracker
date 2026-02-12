@@ -34,4 +34,16 @@ export class AccountsRepository {
   updateAccountBalance(id: string, updatedBalance: number): Promise<Account> {
     return this.repo.save({ id, balance: updatedBalance });
   }
+
+  getTotalBalanceByUserId(userId: string): Promise<number> {
+    return this.repo
+      .createQueryBuilder('account')
+      .select('SUM(account.balance)', 'total_balance')
+      .where('account.user_id = :userId', { userId })
+      .getRawOne()
+      .then(
+        (result: { total_balance: string | null }) =>
+          Number(result?.total_balance) || 0,
+      );
+  }
 }

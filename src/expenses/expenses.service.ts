@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ExpensesRepository } from './expenses.repository';
-import { CreateExpenseDto, UpdateExpenseDto } from './expenses.dto';
+import { CreateExpenseDto, Statistics, UpdateExpenseDto } from './expenses.dto';
 import { AccountsRepository } from 'src/accounts/accounts.repository';
 import { ExpenseType } from './expenses.entities';
 
@@ -130,5 +130,21 @@ export class ExpensesService {
     }
 
     await this.expensesRepo.deleteExpense(expenseId);
+  }
+
+  async getStatistics(userId: string) {
+    const balance = await this.accountRepo.getTotalBalanceByUserId(userId);
+    const totalSpending = await this.expensesRepo.getTotalSpending(userId);
+    const totalIncome = await this.expensesRepo.getTotalIncome(userId);
+    const cashflow = totalIncome - totalSpending;
+
+    const statistics: Statistics = {
+      balance: balance,
+      spending: totalSpending,
+      cashflow: cashflow,
+      income: totalIncome,
+    };
+
+    return statistics;
   }
 }
