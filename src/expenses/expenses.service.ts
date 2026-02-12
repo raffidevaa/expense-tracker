@@ -17,15 +17,11 @@ export class ExpensesService {
       throw new Error('Account not found');
     }
 
-    if (dto.type.toUpperCase() === (ExpenseType.EXPENSE as unknown as string)) {
-      dto.amount = -Math.abs(dto.amount);
-      const newBalance = account.balance + dto.amount;
+    if (dto.type === (ExpenseType.EXPENSE as unknown as string)) {
+      const newBalance = account.balance + -Math.abs(dto.amount);
       await this.accountRepo.updateAccountBalance(dto.account_id, newBalance);
-    } else if (
-      dto.type.toUpperCase() === (ExpenseType.INCOME as unknown as string)
-    ) {
-      dto.amount = Math.abs(dto.amount);
-      const newBalance = account.balance + dto.amount;
+    } else if (dto.type === (ExpenseType.INCOME as unknown as string)) {
+      const newBalance = account.balance + Math.abs(dto.amount);
       await this.accountRepo.updateAccountBalance(dto.account_id, newBalance);
     } else {
       throw new Error('Invalid expense type');
@@ -35,8 +31,8 @@ export class ExpensesService {
       type: dto.type,
       amount: dto.amount,
       description: dto.description,
-      account_id: dto.account_id,
-      category_id: dto.category_id,
+      account: { id: dto.account_id },
+      category: { id: dto.category_id },
     });
 
     return expense;
@@ -51,8 +47,8 @@ export class ExpensesService {
     const updatedExpense = await this.expensesRepo.updateExpense(expenseId, {
       description: dto.description,
       amount: dto.amount,
-      account_id: dto.account_id,
-      category_id: dto.category_id,
+      account: { id: dto.account_id },
+      category: { id: dto.category_id },
     });
 
     return updatedExpense;

@@ -9,6 +9,7 @@ import {
 import { ManyToOne, JoinColumn } from 'typeorm';
 import { Account } from '../accounts/accounts.entities';
 import { Category } from '../categories/categories.entities';
+import { Exclude } from 'class-transformer';
 
 @Entity('expenses')
 export class Expense {
@@ -26,6 +27,7 @@ export class Expense {
 
   @ManyToOne(() => Account)
   @JoinColumn({ name: 'account_id' })
+  @Exclude()
   account: Account;
 
   @RelationId((expense: Expense) => expense.account)
@@ -33,6 +35,7 @@ export class Expense {
 
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
+  @Exclude()
   category: Category;
 
   @RelationId((expense: Expense) => expense.category)
