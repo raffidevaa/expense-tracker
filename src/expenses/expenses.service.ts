@@ -44,11 +44,58 @@ export class ExpensesService {
       throw new Error('Expense not found');
     }
 
+    const account = await this.accountRepo.findAccountById(exist.account_id);
+    if (account == null) {
+      throw new Error('Account not found');
+    }
+
+    const oldAccount = account;
+    const oldAmount = exist.amount;
+    const oldType = exist.type;
+
+    // rollback old balance
+    if (oldType === (ExpenseType.EXPENSE as unknown as string)) {
+      const newBalance = oldAccount.balance + Math.abs(oldAmount);
+      await this.accountRepo.updateAccountBalance(oldAccount.id, newBalance);
+    } else if (oldType === (ExpenseType.INCOME as unknown as string)) {
+      const newBalance = oldAccount.balance - Math.abs(oldAmount);
+      await this.accountRepo.updateAccountBalance(oldAccount.id, newBalance);
+    }
+
+    // check updated account
+    const updatedAccount = await this.accountRepo.findAccountById(
+      dto.account_id || oldAccount.id,
+    );
+    if (updatedAccount == null) {
+      throw new Error('Account not found');
+    }
+
+    // apply new balance
+    const newType = dto.type || oldType;
+    const newAmount = dto.amount || oldAmount;
+
+    if (newType === (ExpenseType.EXPENSE as unknown as string)) {
+      const newBalance = updatedAccount.balance - Math.abs(newAmount);
+      await this.accountRepo.updateAccountBalance(
+        updatedAccount.id,
+        newBalance,
+      );
+    } else if (newType === (ExpenseType.INCOME as unknown as string)) {
+      const newBalance = updatedAccount.balance + Math.abs(newAmount);
+      await this.accountRepo.updateAccountBalance(
+        updatedAccount.id,
+        newBalance,
+      );
+    } else {
+      throw new Error('Invalid expense type');
+    }
+
     const updatedExpense = await this.expensesRepo.updateExpense(expenseId, {
-      description: dto.description,
-      amount: dto.amount,
-      account: { id: dto.account_id },
-      category: { id: dto.category_id },
+      type: newType,
+      amount: newAmount,
+      description: dto.description ?? exist.description,
+      account: { id: updatedAccount.id },
+      category: dto.category_id ? { id: dto.category_id } : exist.category,
     });
 
     return updatedExpense;

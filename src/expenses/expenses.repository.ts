@@ -15,12 +15,27 @@ export class ExpensesRepository {
     return this.repo.save(expense);
   }
 
-  updateExpense(id: string, data: DeepPartial<Expense>): Promise<Expense> {
-    return this.repo.save({ id, ...data });
+  async updateExpense(
+    id: string,
+    data: DeepPartial<Expense>,
+  ): Promise<Expense> {
+    await this.repo.update(id, data);
+
+    const updatedExpense = await this.repo.findOne({
+      where: { id },
+    });
+
+    if (!updatedExpense) {
+      throw new Error(`Expense with id ${id} not found`);
+    }
+
+    return updatedExpense;
   }
 
   findExpenseById(id: string): Promise<Expense | null> {
-    return this.repo.findOne({ where: { id } });
+    return this.repo.findOne({
+      where: { id },
+    });
   }
 
   getAllExpensesByAccountID(accountId: string): Promise<Expense[]> {
