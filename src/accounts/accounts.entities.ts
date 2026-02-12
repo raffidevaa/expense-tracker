@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import { ManyToOne, JoinColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { User } from '../users/users.entities';
 
 @Entity('accounts')
@@ -15,6 +16,7 @@ export class Account {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
+  @Exclude()
   user: User;
 
   @RelationId((account: Account) => account.user)

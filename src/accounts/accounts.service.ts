@@ -19,7 +19,7 @@ export class AccountsService {
     const account = this.accountRepo.createAccount({
       name: dto.name,
       balance: dto.balance,
-      user: user,
+      user: { id: userId },
     });
 
     return account;
@@ -34,7 +34,7 @@ export class AccountsService {
     const updatedAccount = await this.accountRepo.updateAccount(accountId, {
       name: dto.name,
       balance: dto.balance,
-      user: exist.user,
+      user_id: exist.user_id,
     });
 
     return updatedAccount;
