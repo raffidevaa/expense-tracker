@@ -15,6 +15,9 @@ export class Expense {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  type: string;
+
   @Column('float')
   amount: number;
 
@@ -44,4 +47,9 @@ export class Expense {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+}
+
+export enum ExpenseType {
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
 }

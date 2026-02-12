@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ExpensesRepository } from './expenses.repository';
 import { CreateExpenseDto, UpdateExpenseDto } from './expenses.dto';
 import { AccountsRepository } from 'src/accounts/accounts.repository';
+import { ExpenseType } from './expenses.entities';
 
 @Injectable()
 export class ExpensesService {
@@ -11,11 +12,31 @@ export class ExpensesService {
   ) {}
 
   async createExpense(dto: CreateExpenseDto) {
+    const account = await this.accountRepo.findAccountById(dto.account_id);
+    if (account == null) {
+      throw new Error('Account not found');
+    }
+
+    if (dto.type.toUpperCase() === (ExpenseType.EXPENSE as unknown as string)) {
+      dto.amount = -Math.abs(dto.amount);
+      const newBalance = account.balance + dto.amount;
+      await this.accountRepo.updateAccountBalance(dto.account_id, newBalance);
+    } else if (
+      dto.type.toUpperCase() === (ExpenseType.INCOME as unknown as string)
+    ) {
+      dto.amount = Math.abs(dto.amount);
+      const newBalance = account.balance + dto.amount;
+      await this.accountRepo.updateAccountBalance(dto.account_id, newBalance);
+    } else {
+      throw new Error('Invalid expense type');
+    }
+
     const expense = await this.expensesRepo.createExpense({
-      description: dto.description,
+      type: dto.type,
       amount: dto.amount,
-      account: dto.account_id ? { id: dto.account_id } : undefined,
-      category: dto.category_id ? { id: dto.category_id } : undefined,
+      description: dto.description,
+      account_id: dto.account_id,
+      category_id: dto.category_id,
     });
 
     return expense;
@@ -30,8 +51,8 @@ export class ExpensesService {
     const updatedExpense = await this.expensesRepo.updateExpense(expenseId, {
       description: dto.description,
       amount: dto.amount,
-      account: dto.account_id ? { id: dto.account_id } : undefined,
-      category: dto.category_id ? { id: dto.category_id } : undefined,
+      account_id: dto.account_id,
+      category_id: dto.category_id,
     });
 
     return updatedExpense;

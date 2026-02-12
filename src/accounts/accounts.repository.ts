@@ -30,4 +30,8 @@ export class AccountsRepository {
   deleteAccount(id: string): Promise<void> {
     return this.repo.delete(id).then(() => undefined);
   }
+
+  updateAccountBalance(id: string, updatedBalance: number): Promise<Account> {
+    return this.repo.save({ id, balance: updatedBalance });
+  }
 }
