@@ -26,4 +26,8 @@ export class ExpensesRepository {
   getAllExpensesByAccountID(accountId: string): Promise<Expense[]> {
     return this.repo.find({ where: { account: { id: accountId } } });
   }
+
+  deleteExpense(id: string): Promise<void> {
+    return this.repo.delete(id).then(() => undefined);
+  }
 }

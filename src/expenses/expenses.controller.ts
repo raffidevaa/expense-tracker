@@ -8,6 +8,7 @@ import {
   Param,
   Put,
   Get,
+  Delete,
 } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto, UpdateExpenseDto } from './expenses.dto';
@@ -47,5 +48,12 @@ export class ExpensesController {
   @Get('account/:account_id')
   getAllExpensesByAccountId(@Param('account_id') accountId: string) {
     return this.expensesService.getAllExpensesByAccountId(accountId);
+  }
+
+  // delete expense record
+  @HttpCode(HttpStatus.OK)
+  @Delete(':expense_id')
+  deleteExpense(@Param('expense_id') expenseId: string) {
+    return this.expensesService.deleteExpense(expenseId);
   }
 }

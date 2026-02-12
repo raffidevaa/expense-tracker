@@ -58,4 +58,13 @@ export class ExpensesService {
 
     return expenses;
   }
+
+  async deleteExpense(expenseId: string) {
+    const exist = await this.expensesRepo.findExpenseById(expenseId);
+    if (exist == null) {
+      throw new Error('Expense not found');
+    }
+
+    await this.expensesRepo.deleteExpense(expenseId);
+  }
 }
