@@ -27,4 +27,13 @@ export class ExpensesService {
 
     return updatedExpense;
   }
+
+  async getExpenseById(expenseId: string) {
+    const expense = await this.expensesRepo.findExpenseById(expenseId);
+    if (expense == null) {
+      throw new Error('Expense not found');
+    }
+
+    return expense;
+  }
 }

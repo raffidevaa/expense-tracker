@@ -7,6 +7,7 @@ import {
   UseGuards,
   Param,
   Put,
+  Get,
 } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto, UpdateExpenseDto } from './expenses.dto';
@@ -32,5 +33,11 @@ export class ExpensesController {
     @Body() dto: Partial<UpdateExpenseDto>,
   ) {
     return this.expensesService.updateExpense(expenseId, dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':expense_id')
+  getExpenseById(@Param('expense_id') expenseId: string) {
+    return this.expensesService.getExpenseById(expenseId);
   }
 }
