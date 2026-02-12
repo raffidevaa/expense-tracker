@@ -4,7 +4,7 @@ export class Register {
   @IsString()
   username: string;
 
-  @IsString()
+  @IsEmail()
   email: string;
 
   @IsString()
