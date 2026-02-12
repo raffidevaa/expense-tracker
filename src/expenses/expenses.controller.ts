@@ -35,9 +35,17 @@ export class ExpensesController {
     return this.expensesService.updateExpense(expenseId, dto);
   }
 
+  // get expense by id
   @HttpCode(HttpStatus.OK)
   @Get(':expense_id')
   getExpenseById(@Param('expense_id') expenseId: string) {
     return this.expensesService.getExpenseById(expenseId);
+  }
+
+  // get all expenses by account id
+  @HttpCode(HttpStatus.OK)
+  @Get('account/:account_id')
+  getAllExpensesByAccountId(@Param('account_id') accountId: string) {
+    return this.expensesService.getAllExpensesByAccountId(accountId);
   }
 }

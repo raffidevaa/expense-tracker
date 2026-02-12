@@ -10,7 +10,7 @@ export class ExpensesRepository {
     private readonly repo: Repository<Expense>,
   ) {}
 
-  createExpense(data: Partial<Expense>): Promise<Expense> {
+  createExpense(data: DeepPartial<Expense>): Promise<Expense> {
     const expense = this.repo.create(data);
     return this.repo.save(expense);
   }
@@ -21,5 +21,9 @@ export class ExpensesRepository {
 
   findExpenseById(id: string): Promise<Expense | null> {
     return this.repo.findOne({ where: { id } });
+  }
+
+  getAllExpensesByAccountID(accountId: string): Promise<Expense[]> {
+    return this.repo.find({ where: { account: { id: accountId } } });
   }
 }

@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  RelationId,
 } from 'typeorm';
 import { ManyToOne, JoinColumn } from 'typeorm';
 import { Account } from '../accounts/accounts.entities';
@@ -24,9 +25,15 @@ export class Expense {
   @JoinColumn({ name: 'account_id' })
   account: Account;
 
+  @RelationId((expense: Expense) => expense.account)
+  account_id: string;
+
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @RelationId((expense: Expense) => expense.category)
+  category_id: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
