@@ -21,78 +21,45 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Expense Tracker
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Overview
 
-## Project setup
+Expense Tracker API is a simple REST API built using **NestJS (TypeScript)** with an SQL database and JWT-based authentication.
 
-```bash
-$ npm install
-```
+The application allows users to:
 
-## Compile and run the project
+- Register and login using JWT
+- Manage Accounts (CRUD)
+- Manage Expenses (CRUD)
+- View financial statistics
+- Access protected endpoints using authentication tokens
 
-```bash
-# development
-$ npm run start
+ERD is provided through drawsql.app:
+`https://drawsql.app/teams/noobie-isc-tech-dev/diagrams/expense-tracker`
 
-# watch mode
-$ npm run start:dev
+E2E testing is also implemented to verify JWT authentication and protected API behavior.
 
-# production mode
-$ npm run start:prod
-```
+## API Documentation
 
-## Run tests
+API documentation is provided through Postman Collection:
+`https://documenter.getpostman.com/view/30807981/2sBXcBmMRN`
 
-```bash
-# unit tests
-$ npm run test
+## Why Use Modular Controller–Service–Repository Pattern?
 
-# e2e tests
-$ npm run test:e2e
+This project uses a **Modular Architecture with Controller–Service–Repository pattern**, which is a structure I frequently use when building backend applications.
 
-# test coverage
-$ npm run test:cov
-```
+### Reasons for using this pattern:
 
-## Deployment
+1. **Separation of Concerns**
+   - Controller → handles HTTP layer
+   - Service → contains business logic
+   - Repository → handles database access
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+2. **Scalable & Maintainable**
+   Each domain (Auth, Accounts, Expenses) is isolated, making the application easier to extend and maintain.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+3. **Production-oriented Structure**
+   This pattern is commonly used in real-world backend projects because it keeps code clean, structured, and maintainable.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Because I frequently use this approach, it helps me keep project organization consistent and speeds up development while maintaining code clarity.
