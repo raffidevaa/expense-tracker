@@ -129,7 +129,21 @@ export class ExpensesService {
       throw new Error('Expense not found');
     }
 
-    await this.expensesRepo.deleteExpense(expenseId);
+    const account = await this.accountRepo.findAccountById(exist.account_id);
+    if (account == null) {
+      throw new Error('Account not found');
+    }
+
+    // rollback balance
+    if (exist.type === (ExpenseType.EXPENSE as unknown as string)) {
+      const newBalance = account.balance + Math.abs(exist.amount);
+      await this.accountRepo.updateAccountBalance(account.id, newBalance);
+    } else if (exist.type === (ExpenseType.INCOME as unknown as string)) {
+      const newBalance = account.balance - Math.abs(exist.amount);
+      await this.accountRepo.updateAccountBalance(account.id, newBalance);
+    }
+
+    return await this.expensesRepo.deleteExpense(expenseId);
   }
 
   async getStatistics(userId: string) {
